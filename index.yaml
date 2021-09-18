@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  snipe-it:
+  - apiVersion: v2
+    appVersion: version-v5.2.0
+    created: "2021-09-18T23:28:43.525020267+02:00"
+    description: A Helm chart for Snipe IT
+    digest: c8802c932bb6a3fb73ba4998b695c140efef6c82a07ddf67ec9aabb82d5b7f61
+    name: snipe-it
+    type: application
+    urls:
+    - https://danielpodwysocki.github.io/helm-chart/charts/snipe-it-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-09-18T23:28:43.524452632+02:00"
