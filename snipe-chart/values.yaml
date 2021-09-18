@@ -5,24 +5,26 @@
 replicaCount: 1
 snipe:
   # Snipe IT settings
-  APP_KEY: "base64:PTesF+cbgkOsiQkY1WJt68eNn0bMz5hiq8BHH4jkF9g="
-  APP_URL: "https://example.com:443"
+  NGINX_APP_URL: "https://snipe.openvfx.dev"
   APP_ENV: production
+  MYSQL_PORT_3306_TCP_ADDR: snipe-mysql
   APP_DEBUG: false
   APP_TIMEZONE: Europe/Berlin
   APP_LOCALE: en
   # MySQL parameters
-  MYSQL_ROOT_PASSWORD: password 
-  MYSQL_DATABASE: snipeit
+  MYSQL_DATABASE: snipe-mysql
   MYSQL_USER: snipeit
-  MYSQL_PASSWORD: YOUR_snipeit_USER_PASSWORD
 
+secret: snipe-secrets
 
 image:
-  repository: snipe/snipe-it  
+  repository: linuxserver/snipe-it
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
+
+persistance:
+  existingClaim: "snipe-mysql"
 
 imagePullSecrets: []
 nameOverride: ""

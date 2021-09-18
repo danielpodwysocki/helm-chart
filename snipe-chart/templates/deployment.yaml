@@ -38,16 +38,21 @@ spec:
               containerPort: 80
               protocol: TCP
           env:
-            - name: APP_KEY
-              value: "{{ .Values.snipe.APP_KEY }}"
-            - name: MYSQL_ROOT_PASSWORD
-              value: "{{ .Values.snipe.MYSQL_ROOT_PASSWORD }}"
+            - name: NGINX_APP_URL
+              value: "{{ .Values.snipe.NGINX_APP_URL }}"
+            - name: MYSQL_PORT_3306_TCP_ADDR
+              value: "{{ .Values.snipe.MYSQL_PORT_3306_TCP_ADDR }}"
+                #            - name: MYSQL_ROOT_PASSWORD
+                #value: "{{ .Values.snipe.MYSQL_ROOT_PASSWORD }}"
             - name: MYSQL_DATABASE
               value: "{{ .Values.snipe.MYSQL_DATABASE }}"
             - name: MYSQL_USER
               value: "{{ .Values.snipe.MYSQL_USER }}"
             - name: MYSQL_PASSWORD
-              value: "{{ .Values.snipe.MYSQL_PASSWORD }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.secret }}"
+                  key: MYSQL_PASSWORD 
           livenessProbe:
             httpGet:
               path: /
@@ -98,11 +103,23 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: mysql:5.6
+      - image: "{{ .Values.mysql_image.repository }}:{{ .Values.mysql_image.tag }}"
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: "{{ .Values.snipe.MYSQL_ROOT_PASSWORD }}"
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.secret }}"
+              key: MYSQL_ROOT_PASSWORD 
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.snipe.MYSQL_DATABASE }}"
+        - name: MYSQL_USER
+          value: "{{ .Values.snipe.MYSQL_USER }}"
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "{{ .Values.secret }}"
+              key: MYSQL_PASSWORD 
         ports:
         - containerPort: 3306
           name: mysql
@@ -112,7 +129,7 @@ spec:
       volumes:
       - name: snipe-mysql
         persistentVolumeClaim:
-          claimName: snipe-mysql
+          claimName: "{{ .Values.persistance.existingClaim }}"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
